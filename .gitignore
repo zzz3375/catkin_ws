@@ -1,3 +1,5 @@
 src/** 
+build/**
+devel/** 
 tum_output/**
 *.bag
