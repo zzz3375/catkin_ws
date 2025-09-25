@@ -4,7 +4,7 @@
         {
             "label": "build_debug",
             "type": "shell",
-            "command": "catkin_make -DCMAKE_BUILD_TYPE=Debug",
+            "command": "catkin_make -DCMAKE_BUILD_TYPE=Debug CMAKE_EXPORT_COMPILE_COMMANDS=YES",
             "args": [],
             "options": {
                 "cwd": "${workspaceFolder}"
