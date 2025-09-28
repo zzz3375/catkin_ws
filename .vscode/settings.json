@@ -1,0 +1,24 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/zzz2004/catkin_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/zzz2004/catkin_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ],
+    "files.associations": {
+        "bitset": "cpp",
+        "forward_list": "cpp",
+        "fstream": "cpp",
+        "ostream": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "functional": "cpp",
+        "type_traits": "cpp",
+        "typeindex": "cpp",
+        "typeinfo": "cpp",
+        "nonlinearoptimization": "cpp",
+        "cmath": "cpp"
+    }
+}
