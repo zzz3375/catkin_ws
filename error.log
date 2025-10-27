@@ -1,0 +1,2 @@
+WARNING: Using soft CircularBuffer (6144 KiB) FEngine (64 bits) created at 0x72a656d45010 (threading is enabled) 
+FEngine resolved backend: OpenGL X Error of failed request:  GLXBadFBConfig

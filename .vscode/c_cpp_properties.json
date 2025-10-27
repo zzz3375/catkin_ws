@@ -4,6 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/src/**",
+                "src/S-FAST_LIO/**",
                 "${workspaceFolder}/devel/include/**",
                 "/usr/include/**",
                 "/opt/ros/*/include/**"
