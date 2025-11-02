@@ -4,3 +4,4 @@ devel/**
 tum_output/**
 *.bag
 !.vscode/*
+*.pyc
