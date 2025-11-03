@@ -40,12 +40,12 @@ def plot_trajectories(poses):
         print("Error: Not enough poses for visualization")
         return
 
-    # Create figure with 1 row and 4 columns (3D + X + Y + Z)
-    fig = plt.figure(figsize=(20, 6))
+    # Create figure with 3 rows and 6 columns
+    fig = plt.figure(figsize=(20, 12))
     fig.suptitle('Trajectory Visualization', fontsize=16)
     
-    # 3D Trajectory Subplot
-    ax_3d = fig.add_subplot(141, projection='3d')
+    # 3D Trajectory Subplot - occupies left 3x3 area (merged)
+    ax_3d = plt.subplot2grid((3, 6), (0, 0), rowspan=3, colspan=3, projection='3d')
     
     # Plot full trajectory
     ax_3d.plot(poses[:, 0], poses[:, 1], poses[:, 2], 'gray', linewidth=1, label='Trajectory')
@@ -80,36 +80,37 @@ def plot_trajectories(poses):
     ax_3d.set_ylim(mid_y - max_range/2, mid_y + max_range/2)
     ax_3d.set_zlim(mid_z - max_range/2, mid_z + max_range/2)
 
-    # Sequence indices (x-axis for individual plots)
-    indices = np.arange(len(poses))
+    # Calculate time axis (i/len(seq) * 312 seconds)
+    seq_len = len(poses)
+    time_axis = np.arange(seq_len) / seq_len * 312  # Total 312 seconds
     marker_size = 50
     
-    # X-axis trajectory subplot
-    ax_x = fig.add_subplot(142)
-    ax_x.plot(indices, poses[:, 0], 'r-', linewidth=1, label='X Position')
-    ax_x.scatter(indices[0], poses[0, 0], c='green', s=marker_size, marker='*', label='Start')
-    marker_x = ax_x.scatter(indices[selected_idx], poses[selected_idx, 0], c='red', s=marker_size, marker='o')
-    ax_x.set_xlabel('Sequence Number')
+    # X-axis trajectory subplot - right column, first row
+    ax_x = plt.subplot2grid((3, 6), (0, 3), colspan=3)
+    ax_x.plot(time_axis, poses[:, 0], 'r-', linewidth=1, label='X Position')
+    ax_x.scatter(time_axis[0], poses[0, 0], c='green', s=marker_size, marker='*', label='Start')
+    marker_x = ax_x.scatter(time_axis[selected_idx], poses[selected_idx, 0], c='red', s=marker_size, marker='o')
+    ax_x.set_xlabel('Time (s)')
     ax_x.set_ylabel('X (m)')
     ax_x.grid(True)
     ax_x.legend()
     
-    # Y-axis trajectory subplot
-    ax_y = fig.add_subplot(143)
-    ax_y.plot(indices, poses[:, 1], 'g-', linewidth=1, label='Y Position')
-    ax_y.scatter(indices[0], poses[0, 1], c='green', s=marker_size, marker='*')
-    marker_y = ax_y.scatter(indices[selected_idx], poses[selected_idx, 1], c='red', s=marker_size, marker='o')
-    ax_y.set_xlabel('Sequence Number')
+    # Y-axis trajectory subplot - right column, second row
+    ax_y = plt.subplot2grid((3, 6), (1, 3), colspan=3)
+    ax_y.plot(time_axis, poses[:, 1], 'g-', linewidth=1, label='Y Position')
+    ax_y.scatter(time_axis[0], poses[0, 1], c='green', s=marker_size, marker='*')
+    marker_y = ax_y.scatter(time_axis[selected_idx], poses[selected_idx, 1], c='red', s=marker_size, marker='o')
+    ax_y.set_xlabel('Time (s)')
     ax_y.set_ylabel('Y (m)')
     ax_y.grid(True)
     ax_y.legend()
     
-    # Z-axis trajectory subplot
-    ax_z = fig.add_subplot(144)
-    ax_z.plot(indices, poses[:, 2], 'b-', linewidth=1, label='Z Position')
-    ax_z.scatter(indices[0], poses[0, 2], c='green', s=marker_size, marker='*')
-    marker_z = ax_z.scatter(indices[selected_idx], poses[selected_idx, 2], c='red', s=marker_size, marker='o')
-    ax_z.set_xlabel('Sequence Number')
+    # Z-axis trajectory subplot - right column, third row
+    ax_z = plt.subplot2grid((3, 6), (2, 3), colspan=3)
+    ax_z.plot(time_axis, poses[:, 2], 'b-', linewidth=1, label='Z Position')
+    ax_z.scatter(time_axis[0], poses[0, 2], c='green', s=marker_size, marker='*')
+    marker_z = ax_z.scatter(time_axis[selected_idx], poses[selected_idx, 2], c='red', s=marker_size, marker='o')
+    ax_z.set_xlabel('Time (s)')
     ax_z.set_ylabel('Z (m)')
     ax_z.grid(True)
     ax_z.legend()
@@ -129,15 +130,15 @@ def plot_trajectories(poses):
         
         # Update X marker
         marker_x.remove()
-        marker_x = ax_x.scatter(indices[idx], poses[idx, 0], c='red', s=marker_size, marker='o')
+        marker_x = ax_x.scatter(time_axis[idx], poses[idx, 0], c='red', s=marker_size, marker='o')
         
         # Update Y marker
         marker_y.remove()
-        marker_y = ax_y.scatter(indices[idx], poses[idx, 1], c='red', s=marker_size, marker='o')
+        marker_y = ax_y.scatter(time_axis[idx], poses[idx, 1], c='red', s=marker_size, marker='o')
         
         # Update Z marker
         marker_z.remove()
-        marker_z = ax_z.scatter(indices[idx], poses[idx, 2], c='red', s=marker_size, marker='o')
+        marker_z = ax_z.scatter(time_axis[idx], poses[idx, 2], c='red', s=marker_size, marker='o')
         
         # Recalculate and display error
         result = calculate_end_to_end_error(poses, idx)
@@ -145,31 +146,16 @@ def plot_trajectories(poses):
             error, start, end = result
             error_text.set_text(
                 f"End-to-end error: {error:.4g}m | Start: [{start[0]:.2f}, {start[1]:.2f}, {start[2]:.2f}] | "
-                f"End: [{end[0]:.2f}, {end[1]:.2f}, {end[2]:.2f}] (Index: {idx})"
+                f"End: [{end[0]:.2f}, {end[1]:.2f}, {end[2]:.2f}] (Index: {idx}, Time: {time_axis[idx]:.2f}s)"
             )
         fig.canvas.draw_idle()
 
     def on_click(event):
         """Handle mouse click to select closest point in any subplot"""
-        # if event.inaxes == ax_3d:
-        #     # Handle 3D plot click
-        #     x, y = event.xdata, event.ydata
-        #     ray_origin, ray_direction = ax_3d.unproject_ray(x, y)
-            
-        #     closest_dist = float('inf')
-        #     closest_idx = selected_idx
-        #     for i, (px, py, pz) in enumerate(poses):
-        #         v = np.array([px, py, pz]) - ray_origin
-        #         dist = np.linalg.norm(np.cross(v, ray_direction))
-        #         if dist < closest_dist:
-        #             closest_dist = dist
-        #             closest_idx = i
-        #     update_end_point(closest_idx)
-            
         if event.inaxes in [ax_x, ax_y, ax_z]:
-            # Handle 2D plot click (use x coordinate as sequence reference)
-            click_idx = event.xdata
-            closest_idx = np.argmin(np.abs(indices - click_idx))
+            # Handle 2D plot click (use time coordinate as reference)
+            click_time = event.xdata
+            closest_idx = np.argmin(np.abs(time_axis - click_time))
             update_end_point(closest_idx)
 
     # Add buttons for quick selection
