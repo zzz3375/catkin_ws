@@ -229,6 +229,7 @@ def visualize_imu_trajectory_3d(bag_file, imu_topic='/imu/data', max_messages=10
             
             # Extract Euler angles
             euler = extract_euler_angles(current_pose[:3, :3])
+            euler[euler>160] = euler[euler>160] - 360
             euler_angles.append(euler)
             
             pbar.update(len(chunk_data))
