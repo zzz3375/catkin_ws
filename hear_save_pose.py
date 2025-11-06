@@ -194,9 +194,11 @@ def main():
     signal.signal(signal.SIGTERM, signal_handler)
     
     # Subscribe to odom topic (fixed topic name)
-    rospy.Subscriber('/lio_sam/mapping/odometry', Odometry, odom_callback)
+    # odom_topic = '/lio_sam/mapping/odometry' #lio_sam
+    odom_topic = '/Odometry' #FASTLIO
+    rospy.Subscriber( odom_topic, Odometry, odom_callback)
     
-    rospy.loginfo("Started listening to /odom topic... (Press Ctrl+C to save and exit)")
+    rospy.loginfo(f"Started listening to {odom_topic} topic... (Press Ctrl+C to save and exit)")
     rospy.loginfo("Will create:")
     rospy.loginfo("  - Position and orientation vs time plots")
     rospy.loginfo("  - 3D trajectory plot with equal axis scaling")
